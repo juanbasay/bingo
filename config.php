@@ -1,0 +1,4 @@
+<?php
+
+$cartonPorLinea = 10;
+?>
