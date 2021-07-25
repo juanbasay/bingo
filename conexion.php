@@ -129,10 +129,10 @@ function consultarJuegos(){
   $db     = new mysqlClass();
   $conn   = $db->conectar();
   
-  $sql = "select NumeroJuego from juego;";
+  $sql = "select * from juego;";
   if ($result = $conn -> query($sql)) {      
       while ($row = $result->fetch_array()) {
-          array_push($obj,$row[0]);
+          array_push($obj,$row);
       } 
       $result -> free_result();
   }

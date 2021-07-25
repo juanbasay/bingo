@@ -15,92 +15,73 @@ if(isset($_POST) && !empty($_POST["accion"])){
       default:
         break;
     }
-  }
+}
+
+$juego =$_POST["juego"];
+if(!$juego)
+    die(header("Location: ListaJuegos.php"));
 
 function InListStyle($num, $arr){
     return in_array($num, $arr) ? "style='background-color:green;'" : "";
 }
 
-$ListaHorizontal = [];
-$ListaVertical = [];
 $ListaDiagIzq = [];
 $ListaDiagDer = [];
+$ListaHorizontalMedio = [];
+$ListaEsquinas = [];
+$ListaEquis = [];
+$ListaCruz = [];
 $ListaCompleto = [];
 
-function IsHorizontal($carton, $arr){
+function IsHorizontalMedio($carton, $arr){
     if($carton && $arr){
-        if( in_array($carton->b_1, $arr) &&
-            in_array($carton->i_1, $arr) &&
-            in_array($carton->n_1, $arr) &&
-            in_array($carton->g_1, $arr) &&
-            in_array($carton->o_1, $arr) ){
-            return true;
-        }
-        if( in_array($carton->b_2, $arr) &&
-            in_array($carton->i_2, $arr) &&
-            in_array($carton->n_2, $arr) &&
-            in_array($carton->g_2, $arr) &&
-            in_array($carton->o_2, $arr)){
-            return true;
-        }
+       
         if( in_array($carton->b_3, $arr) &&
             in_array($carton->i_3, $arr) &&
             in_array($carton->g_3, $arr) &&
             in_array($carton->o_3, $arr)){
             return true;
         }
-        if( in_array($carton->b_4, $arr) &&
-            in_array($carton->i_4, $arr) &&
-            in_array($carton->n_4, $arr) &&
-            in_array($carton->g_4, $arr) &&
-            in_array($carton->o_4, $arr)){
-            return true;
-        }
-        if( in_array($carton->b_5, $arr) &&
-            in_array($carton->i_5, $arr) &&
-            in_array($carton->n_5, $arr) &&
-            in_array($carton->g_5, $arr) &&
-            in_array($carton->o_5, $arr)){
-            return true;
-        }
     }
     return false;
 }
 
-function IsVertical($carton, $arr){
+function IsEsquinas($carton, $arr){
     if($carton && $arr){
         if( in_array($carton->b_1, $arr) &&
-            in_array($carton->b_2, $arr) &&
-            in_array($carton->b_3, $arr) &&
-            in_array($carton->b_4, $arr) &&
-            in_array($carton->b_5, $arr)){
+            in_array($carton->o_1, $arr) &&
+            in_array($carton->b_5, $arr) &&
+            in_array($carton->o_5, $arr)){
             return true;
         }
-        elseif( in_array($carton->i_1, $arr) &&
-            in_array($carton->i_2, $arr) &&
-            in_array($carton->i_3, $arr) &&
-            in_array($carton->i_4, $arr) &&
-            in_array($carton->i_5, $arr)){
+        else 
+            return false;
+    }
+    return false;
+}
+
+function IsEquis($carton, $arr){
+    if($carton && $arr){
+        if(IsDiagIzq($carton,$arr) && IsDiagDer($carton,$arr))
             return true;
-        }
-        elseif( in_array($carton->n_1, $arr) &&
+        else 
+            return false;
+
+    }
+    return false;
+}
+
+function IsCruz($carton, $arr){
+    if($carton && $arr){
+        if( in_array($carton->n_1, $arr) &&
             in_array($carton->n_2, $arr) &&
             in_array($carton->n_4, $arr) &&
-            in_array($carton->n_5, $arr)){
-            return true;
-        }
-        elseif( in_array($carton->g_1, $arr) &&
+            in_array($carton->n_5, $arr) &&
+            in_array($carton->b_2, $arr) &&
+            in_array($carton->i_2, $arr) &&
+            in_array($carton->n_2, $arr) &&
             in_array($carton->g_2, $arr) &&
-            in_array($carton->g_3, $arr) &&
-            in_array($carton->g_4, $arr) &&
-            in_array($carton->g_5, $arr)){
-            return true;
-        }
-        elseif( in_array($carton->o_1, $arr) &&
-            in_array($carton->o_2, $arr) &&
-            in_array($carton->o_3, $arr) &&
-            in_array($carton->o_4, $arr) &&
-            in_array($carton->o_5, $arr)){
+            in_array($carton->o_2, $arr)){
             return true;
         }
         else 
@@ -178,7 +159,6 @@ function IsCompleto($carton, $arr){
 
 
 
-$juego =$_POST["juego"];
 
 $cantados =  consultarCantado($juego);
 
@@ -192,13 +172,12 @@ $cantados =  consultarCantado($juego);
         <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
         <script>
             function consultarCarton(){
+                $("[name=cartones]").each(function(){$(this).parent().prop("hidden",false);})   
                 var numero = document.getElementById("carton").value;
                 if(numero){
                     $("[name=cartones]").not("#carton_"+numero).each(function(){$(this).parent().prop("hidden",true);})
                 }
-                else{
-                 $("[name=cartones]").each(function(){$(this).parent().prop("hidden",false);})   
-                }
+                
             }
             function addLiCarton(ul, numero){
                 console.log(numero);
@@ -231,19 +210,25 @@ $cantados =  consultarCantado($juego);
                     Números Cantados
                     </th>
                     <th>
-                    Cartones horizontal
+                    Binguito Diagonal Izquierda
                     </th>
                     <th>
-                    Cartones vertical
+                    Binguito Diagonal Derecha
                     </th>
                     <th>
-                    Cartones diagonal izquierda
+                    Binguito Horizontal Medio
                     </th>
                     <th>
-                    Cartones diagonal derecha
+                    Binguito Esquinas
                     </th>
                     <th>
-                    Cartones completos
+                    Binguito Equis
+                    </th>
+                    <th>
+                    Binguito Cruz
+                    </th>
+                     <th>
+                    Binguito Completo
                     </th>
                 </tr>
             </thead>
@@ -266,20 +251,28 @@ $cantados =  consultarCantado($juego);
                         <?php } ?>
                     </td>
                     <td style="vertical-align: top;">
-                        <ul id="Horizontal">
-                        </ul>
-                    </td>
-                    <td style="vertical-align: top;">
-                         <ul id="Vertical">
-                         </ul>
-                    </td>
-                    <td style="vertical-align: top;">
                         <ul id="DiagIzq">
                         </ul>
                     </td>
                     <td style="vertical-align: top;">
                         <ul id="DiagDer">
                         </ul>
+                    </td>
+                    <td style="vertical-align: top;">
+                        <ul id="HorizontalMedio">
+                        </ul>
+                    </td>
+                    <td style="vertical-align: top;">
+                         <ul id="Esquinas">
+                         </ul>
+                    </td>
+                    <td style="vertical-align: top;">
+                         <ul id="Equis">
+                         </ul>
+                    </td>
+                    <td style="vertical-align: top;">
+                         <ul id="Cruz">
+                         </ul>
                     </td>
                     <td style="vertical-align: top;">
                         <ul id="Completo">
@@ -306,15 +299,25 @@ $cantados =  consultarCantado($juego);
                 echo "<tr>";
                 $i=0;
                 foreach(consultarCartonBingo() as $carton){
-
-                    if(IsHorizontal($carton,$cantados))
-                        array_push($ListaHorizontal,$carton->NumeroCartonBingo);
-                    if(IsVertical($carton,$cantados))
-                        array_push($ListaVertical,$carton->NumeroCartonBingo);
                     if(IsDiagIzq($carton,$cantados))
                         array_push($ListaDiagIzq,$carton->NumeroCartonBingo);
+
                     if(IsDiagDer($carton,$cantados))
                         array_push($ListaDiagDer,$carton->NumeroCartonBingo);
+
+                    if(IsHorizontalMedio($carton,$cantados))
+                        array_push($ListaHorizontalMedio,$carton->NumeroCartonBingo);
+
+                    if(IsEsquinas($carton,$cantados))
+                        array_push($ListaEsquinas,$carton->NumeroCartonBingo);
+
+                     if(IsEquis($carton,$cantados))
+                        array_push($ListaEquis,$carton->NumeroCartonBingo);
+
+                     if(IsCruz($carton,$cantados))
+                        array_push($ListaCruz,$carton->NumeroCartonBingo);
+
+
                     if(IsCompleto($carton,$cantados))
                         array_push($ListaCompleto,$carton->NumeroCartonBingo);
                     
@@ -418,21 +421,27 @@ $cantados =  consultarCantado($juego);
             }
                 ?>
             <script>
-                <?php
-                foreach($ListaHorizontal as $num){?>
-                    addLiCarton("Horizontal",<?=$num?>)
-                <?php }
-                foreach($ListaVertical as $num){?>
-                    addLiCarton("Vertical",<?=$num?>)
-                <?php }
+                <?php 
                 foreach($ListaDiagIzq as $num){?>
-                    addLiCarton("DiagIzq",<?=$num?>)
+                    addLiCarton("DiagIzq",<?=$num?>);
                 <?php }
                 foreach($ListaDiagDer as $num){?>
-                    addLiCarton("DiagDer",<?=$num?>)
+                    addLiCarton("DiagDer",<?=$num?>);
+                <?php }
+                foreach($ListaHorizontalMedio as $num){?>
+                    addLiCarton("HorizontalMedio",<?=$num?>);
+                <?php }
+                foreach($ListaEsquinas as $num){?>
+                    addLiCarton("Esquinas",<?=$num?>);
+                <?php }
+                foreach($ListaEquis as $num){?>
+                    addLiCarton("Equis",<?=$num?>);
+                <?php }
+                foreach($ListaCruz as $num){?>
+                    addLiCarton("Cruz",<?=$num?>);
                 <?php }
                 foreach($ListaCompleto as $num){?>
-                    addLiCarton("Completo",<?=$num?>)
+                    addLiCarton("Completo",<?=$num?>);
                 <?php }?>
 
             </script>

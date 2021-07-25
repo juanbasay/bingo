@@ -35,6 +35,7 @@ $lista = consultarJuegos();
             <thead>
                 <tr>
                     <th>Lista de juegos</th>
+                    <th>Fecha Juego</th>
                 </tr>
             </thead>
             <tbody>
@@ -45,8 +46,9 @@ $lista = consultarJuegos();
                 <?php
                 if(!empty($lista)){
                 foreach($lista as $juego){?>
-                <tr>
-                    <td style="text-align: center;" onclick="submit(<?=$juego?>)"><?=$juego?></td>
+                <tr onclick="submit(<?=$juego["NumeroJuego"]?>)">
+                    <td style="text-align: center;" ><?=$juego["NumeroJuego"]?></td>
+                    <td style="text-align: center;" ><?=$juego["FechaJuego"]?></td>
                 </tr>
                 <?php }}?>
             </tbody>
