@@ -235,7 +235,7 @@ $cantados =  Data\consultarCantado($juego);
         </script>
     </heead>
     <body>        
-        <a href="listaJuegos.php">Volver</a>
+        <a href="ListaJuegos.php">Volver</a>
         <br/>
         <hr />
         <form method="post">
