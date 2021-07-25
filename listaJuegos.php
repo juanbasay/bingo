@@ -1,24 +1,18 @@
 <?php
-include("conexion.php");
 include("config.php");
-include("clases.php");
+include("Model/data.php");
+include("Class/cantado.class.php");
    
 if(isset($_POST) && !empty($_POST["accion"])){
     switch($_POST["accion"]){
         case "nuevo":
-                NuevoJuego();
+            Data\NuevoJuego();
             break;
       default:
         break;
     }
 }
-
-$lista = consultarJuegos();
-
-
-
-
-
+$lista = Data\consultarJuegos();
 ?>
 
 

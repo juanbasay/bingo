@@ -1,16 +1,17 @@
 <?php
-include("conexion.php");
 include("config.php");
-include("clases.php");
+include("Model/data.php");
+include("Class/cantado.class.php");
+include("Class/carton_bingo.class.php");
 
 if(isset($_POST) && !empty($_POST["accion"])){
     switch($_POST["accion"]){
         case "guardar":
             if(!empty($_POST["numero"]))
-                GuardarNumero($_POST["numero"], $_POST["juego"]);
+                Data\GuardarNumero($_POST["numero"], $_POST["juego"]);
             break;
         case "deshacer":
-            DeshacerNumero($_POST["juego"]);
+            Data\DeshacerNumero($_POST["juego"]);
             break;
       default:
         break;
@@ -35,7 +36,6 @@ $ListaCompleto = [];
 
 function IsHorizontalMedio($carton, $arr){
     if($carton && $arr){
-       
         if( in_array($carton->b_3, $arr) &&
             in_array($carton->i_3, $arr) &&
             in_array($carton->g_3, $arr) &&
@@ -73,6 +73,7 @@ function IsEquis($carton, $arr){
 
 function IsCruz($carton, $arr){
     if($carton && $arr){
+        
         if( in_array($carton->n_1, $arr) &&
             in_array($carton->n_2, $arr) &&
             in_array($carton->n_4, $arr) &&
@@ -107,6 +108,7 @@ function IsDiagIzq($carton, $arr){
 
 function IsDiagDer($carton, $arr){
     if($carton && $arr){
+        
         if( in_array($carton->b_5, $arr) &&
                 in_array($carton->i_4, $arr) &&
                 in_array($carton->g_2, $arr) &&
@@ -121,6 +123,7 @@ function IsDiagDer($carton, $arr){
 
 function IsCompleto($carton, $arr){
     if($carton && $arr){
+        
         if( in_array($carton->b_1, $arr) &&
             in_array($carton->b_2, $arr) &&
             in_array($carton->b_3, $arr) &&
@@ -160,7 +163,7 @@ function IsCompleto($carton, $arr){
 
 
 
-$cantados =  consultarCantado($juego);
+$cantados =  Data\consultarCantado($juego);
 
 ?>
 
@@ -173,16 +176,62 @@ $cantados =  consultarCantado($juego);
         <script>
             function consultarCarton(){
                 $("[name=cartones]").each(function(){$(this).parent().prop("hidden",false);})   
-                var numero = document.getElementById("carton").value;
-                if(numero){
-                    $("[name=cartones]").not("#carton_"+numero).each(function(){$(this).parent().prop("hidden",true);})
+                var numero1 = document.getElementById("carton_consulta_1").value;
+                var numero2 = document.getElementById("carton_consulta_2").value;
+                var numero3 = document.getElementById("carton_consulta_3").value;
+                var numero4 = document.getElementById("carton_consulta_4").value;
+                var numero5 = document.getElementById("carton_consulta_5").value;
+                var numero6 = document.getElementById("carton_consulta_6").value;
+                if(numero1 || numero2 || numero3 || numero4 || numero5 || numero6){
+                    $("[name=cartones]").not("#carton_"+numero1)
+                                        .not("#carton_"+numero2)
+                                        .not("#carton_"+numero3)
+                                        .not("#carton_"+numero4)
+                                        .not("#carton_"+numero5)
+                                        .not("#carton_"+numero6)
+                        .each(function(){$(this).parent().prop("hidden",true);})
                 }
-                
             }
             function addLiCarton(ul, numero){
-                console.log(numero);
-                $("#"+ul).append("<li>"+numero+"</li>");
+                if(ul && numero){
+                    $("#"+ul).append("<li>"+numero+"</li>");
+                }
             }
+
+            function ModoDeJuego(modo){
+                console.log("este es el modo:");
+                console.log(modo);
+                if(modo){
+                    switch(modo){
+                        case 1:
+                            $('.ocultar').prop('hidden',true);$('#td_DiagIzq').prop('hidden',false);$('#titulo_DiagIzq').prop('hidden',false)
+                            break;
+                        case 2:
+                            $('.ocultar').prop('hidden',true);$('#td_DiagDer').prop('hidden',false);$('#titulo_DiagDer').prop('hidden',false)
+                            break;
+                        case 3:
+                            $('.ocultar').prop('hidden',true);$('#td_HorizontalMedio').prop('hidden',false);$('#titulo_HorizontalMedio').prop('hidden',false)
+                            break;
+                        case 4:
+                            $('.ocultar').prop('hidden',true);$('#td_Esquinas').prop('hidden',false);$('#titulo_Esquinas').prop('hidden',false)
+                            break;
+                        case 5:
+                            $('.ocultar').prop('hidden',true);$('#td_Equis').prop('hidden',false);$('#titulo_Equis').prop('hidden',false)
+                            break;
+                        case 6:
+                            $('.ocultar').prop('hidden',true);$('#td_Cruz').prop('hidden',false);$('#titulo_Cruz').prop('hidden',false)
+                            break;
+                        case 7:
+                            $('.ocultar').prop('hidden',true);$('#td_Completo').prop('hidden',false);$('#titulo_Completo').prop('hidden',false)
+                            break;
+                        default:
+                            break;
+                    }
+                    $("#modoJuego").val(modo);
+                }
+            }
+
+
         </script>
     </heead>
     <body>        
@@ -194,9 +243,19 @@ $cantados =  consultarCantado($juego);
             <input type="hidden" id="juego" name="juego" value="<?=$juego?>"?>
             <input type="hidden"  name="accion" value="guardar">
             <input type="number" min=1 max=75 id="numero" name="numero">
+            <input type="hidden" name="modoJuego" id="modoJuego" />
             <button type="submit">Enviar</button>
         </form>
+        <hr />
+        Modos de juego
 
+        <button onclick="ModoDeJuego(1);">Binguito Diagonal Izquierda</button>  
+        <button onclick="ModoDeJuego(2);">Binguito Diagonal Derecha</button>    
+        <button onclick="ModoDeJuego(3);">Binguito Horizontal Medio</button>    
+        <button onclick="ModoDeJuego(4);">Binguito Esquinas</button>    
+        <button onclick="ModoDeJuego(5);">Binguito Equis</button>   
+        <button onclick="ModoDeJuego(6);">Binguito Cruz</button>    
+        <button onclick="ModoDeJuego(7);">Binguito Completo</button> 
 
         <?php
         if(!empty($cantados)){
@@ -209,25 +268,25 @@ $cantados =  consultarCantado($juego);
                     <th>
                     Números Cantados
                     </th>
-                    <th>
+                    <th hidden class="ocultar" id="titulo_DiagIzq">
                     Binguito Diagonal Izquierda
                     </th>
-                    <th>
+                    <th hidden class="ocultar" id="titulo_DiagDer">
                     Binguito Diagonal Derecha
                     </th>
-                    <th>
+                    <th hidden class="ocultar" id="titulo_HorizontalMedio">
                     Binguito Horizontal Medio
                     </th>
-                    <th>
+                    <th hidden class="ocultar" id="titulo_Esquinas">
                     Binguito Esquinas
                     </th>
-                    <th>
+                    <th hidden class="ocultar" id="titulo_Equis">
                     Binguito Equis
                     </th>
-                    <th>
+                    <th hidden class="ocultar" id="titulo_Cruz">
                     Binguito Cruz
                     </th>
-                     <th>
+                     <th hidden class="ocultar" id="titulo_Completo">
                     Binguito Completo
                     </th>
                 </tr>
@@ -235,47 +294,90 @@ $cantados =  consultarCantado($juego);
             <tbody>
                 <tr>
                     <td style="vertical-align: top;">
-                        <ul>
+                        <table>
+                            <tr>
+                                
+
                             <?php
-                            foreach( $cantados as $cantado )
-                            {?>
-                                <li><?=($cantado)?> </li>
-                            <?php }?>
-                            <form method="post" id="formDeshacer">
-                                <input type="hidden" id="juego" name="juego" value="<?=$juego?>"?>
-                                <input type="hidden" name="accion" value="deshacer">
-                                <br/>
-                                <button onclick="if(confirm('¿Estás seguro de deshacer el último número marcado?')==true){document.getElementById('formDeshacer').submit() }">Deshacer</button>
-                            </form>
-                        </ul>
+                            $x = 0;
+                            $cantadosArr = [];
+                            foreach($cantados as $obj) array_push($cantadosArr,$obj->NumeroCantado);
+                            foreach( $cantados as $cantado ){
+                                if($x==0){
+                                    echo "<td style='vertical-align: top;'><ul>";
+                                }
+                                $x= $x+1;
+                                
+                            ?>
+                                    <?php
+                                        $letraCantado = "";
+                                        if($cantado->NumeroCantado<=15)
+                                            $letraCantado = "B";
+                                        elseif($cantado->NumeroCantado<=30)
+                                            $letraCantado = "I";
+                                        elseif($cantado->NumeroCantado<=45)
+                                            $letraCantado = "N";
+                                        elseif($cantado->NumeroCantado<=60)
+                                            $letraCantado = "G";
+                                        elseif($cantado->NumeroCantado<=75)
+                                            $letraCantado = "O";
+                                    ?>
+                                        <li><?=($letraCantado."".$cantado->NumeroCantado)?> </li>
+
+                                        <?php
+                                    if($x == $cantadosPorLinea){
+                                        $x=0;
+                                        echo "</ul></td>";
+                                    }
+                                ?>
+
+                                        <?php }?>
+                                        
+                                
+                                
+                                    </ul>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <form method="post" id="formDeshacer">
+                                        <input type="hidden" id="juego" name="juego" value="<?=$juego?>"?>
+                                        <input type="hidden" name="accion" value="deshacer">
+                                        <br/>
+                                        <button onclick="if(confirm('¿Estás seguro de deshacer el último número marcado?')==true){document.getElementById('formDeshacer').submit() }">Deshacer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </table>
+
                         <?php } ?>
                     </td>
-                    <td style="vertical-align: top;">
-                        <ul id="DiagIzq">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_DiagIzq">
+                        <ul id="DiagIzq" >
                         </ul>
                     </td>
-                    <td style="vertical-align: top;">
-                        <ul id="DiagDer">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_DiagDer">
+                        <ul id="DiagDer" >
                         </ul>
                     </td>
-                    <td style="vertical-align: top;">
-                        <ul id="HorizontalMedio">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_HorizontalMedio">
+                        <ul id="HorizontalMedio" >
                         </ul>
                     </td>
-                    <td style="vertical-align: top;">
-                         <ul id="Esquinas">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Esquinas">
+                         <ul id="Esquinas" >
                          </ul>
                     </td>
-                    <td style="vertical-align: top;">
-                         <ul id="Equis">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Equis">
+                         <ul id="Equis" >
                          </ul>
                     </td>
-                    <td style="vertical-align: top;">
-                         <ul id="Cruz">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Cruz">
+                         <ul id="Cruz" >
                          </ul>
                     </td>
-                    <td style="vertical-align: top;">
-                        <ul id="Completo">
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Completo">
+                        <ul id="Completo" >
                         </ul>
                     </td>
                 </tr>
@@ -285,8 +387,14 @@ $cantados =  consultarCantado($juego);
 
         <hr /> 
                 <label>Consultar Cartón</label>
-                <input id="carton" name="carton" type="number" min=1 max=<?=$totalCartones?>>
-                <button type="button" onclick="consultarCarton()">Consultar </button>
+                <input id="carton_consulta_1" name="carton_consulta" oninput="consultarCarton()" type="number" min=1 max=<?=$totalCartones?>>
+                <input id="carton_consulta_2" name="carton_consulta" oninput="consultarCarton()" type="number" min=1 max=<?=$totalCartones?>>
+                <input id="carton_consulta_3" name="carton_consulta" oninput="consultarCarton()" type="number" min=1 max=<?=$totalCartones?>>
+                <input id="carton_consulta_4" name="carton_consulta" oninput="consultarCarton()" type="number" min=1 max=<?=$totalCartones?>>
+                <input id="carton_consulta_5" name="carton_consulta" oninput="consultarCarton()" type="number" min=1 max=<?=$totalCartones?>>
+                <input id="carton_consulta_6" name="carton_consulta" oninput="consultarCarton()" type="number" min=1 max=<?=$totalCartones?>>
+                
+                <button type="button" onclick="$('[name=carton_consulta]').val(''); consultarCarton();">Limpiar</button>
  
         <hr />
         <table border=1>
@@ -298,27 +406,27 @@ $cantados =  consultarCantado($juego);
                 $contador = 0;
                 echo "<tr>";
                 $i=0;
-                foreach(consultarCartonBingo() as $carton){
-                    if(IsDiagIzq($carton,$cantados))
+                foreach(Data\consultarCartonBingo() as $carton){
+                    if(IsDiagIzq($carton,$cantadosArr))
                         array_push($ListaDiagIzq,$carton->NumeroCartonBingo);
 
-                    if(IsDiagDer($carton,$cantados))
+                    if(IsDiagDer($carton,$cantadosArr))
                         array_push($ListaDiagDer,$carton->NumeroCartonBingo);
 
-                    if(IsHorizontalMedio($carton,$cantados))
+                    if(IsHorizontalMedio($carton,$cantadosArr))
                         array_push($ListaHorizontalMedio,$carton->NumeroCartonBingo);
 
-                    if(IsEsquinas($carton,$cantados))
+                    if(IsEsquinas($carton,$cantadosArr))
                         array_push($ListaEsquinas,$carton->NumeroCartonBingo);
 
-                     if(IsEquis($carton,$cantados))
+                     if(IsEquis($carton,$cantadosArr))
                         array_push($ListaEquis,$carton->NumeroCartonBingo);
 
-                     if(IsCruz($carton,$cantados))
+                     if(IsCruz($carton,$cantadosArr))
                         array_push($ListaCruz,$carton->NumeroCartonBingo);
 
 
-                    if(IsCompleto($carton,$cantados))
+                    if(IsCompleto($carton,$cantadosArr))
                         array_push($ListaCompleto,$carton->NumeroCartonBingo);
                     
 
@@ -377,39 +485,39 @@ $cantados =  consultarCantado($juego);
                     </thead>
                     <tbody>
                         <tr>
-                            <td <?=InListStyle($carton->b_1,$cantados)?>><?=$carton->b_1?></td>
-                            <td <?=InListStyle($carton->i_1,$cantados)?>><?=$carton->i_1?></td>
-                            <td <?=InListStyle($carton->n_1,$cantados)?>><?=$carton->n_1?></td>
-                            <td <?=InListStyle($carton->g_1,$cantados)?>><?=$carton->g_1?></td>
-                            <td <?=InListStyle($carton->o_1,$cantados)?>><?=$carton->o_1?></td>
+                            <td <?=InListStyle($carton->b_1,$cantadosArr)?>><?=$carton->b_1?></td>
+                            <td <?=InListStyle($carton->i_1,$cantadosArr)?>><?=$carton->i_1?></td>
+                            <td <?=InListStyle($carton->n_1,$cantadosArr)?>><?=$carton->n_1?></td>
+                            <td <?=InListStyle($carton->g_1,$cantadosArr)?>><?=$carton->g_1?></td>
+                            <td <?=InListStyle($carton->o_1,$cantadosArr)?>><?=$carton->o_1?></td>
                         </tr>
                         <tr>
-                            <td <?=InListStyle($carton->b_2,$cantados)?>><?=$carton->b_2?></td>
-                            <td <?=InListStyle($carton->i_2,$cantados)?>><?=$carton->i_2?></td>
-                            <td <?=InListStyle($carton->n_2,$cantados)?>><?=$carton->n_2?></td>
-                            <td <?=InListStyle($carton->g_2,$cantados)?>><?=$carton->g_2?></td>
-                            <td <?=InListStyle($carton->o_2,$cantados)?>><?=$carton->o_2?></td>
+                            <td <?=InListStyle($carton->b_2,$cantadosArr)?>><?=$carton->b_2?></td>
+                            <td <?=InListStyle($carton->i_2,$cantadosArr)?>><?=$carton->i_2?></td>
+                            <td <?=InListStyle($carton->n_2,$cantadosArr)?>><?=$carton->n_2?></td>
+                            <td <?=InListStyle($carton->g_2,$cantadosArr)?>><?=$carton->g_2?></td>
+                            <td <?=InListStyle($carton->o_2,$cantadosArr)?>><?=$carton->o_2?></td>
                         </tr>
                         <tr>
-                            <td <?=InListStyle($carton->b_3,$cantados)?>><?=$carton->b_3?></td>
-                            <td <?=InListStyle($carton->i_3,$cantados)?>><?=$carton->i_3?></td>
+                            <td <?=InListStyle($carton->b_3,$cantadosArr)?>><?=$carton->b_3?></td>
+                            <td <?=InListStyle($carton->i_3,$cantadosArr)?>><?=$carton->i_3?></td>
                             <td></td>
-                            <td <?=InListStyle($carton->g_3,$cantados)?>><?=$carton->g_3?></td>
-                            <td <?=InListStyle($carton->o_3,$cantados)?>><?=$carton->o_3?></td>
+                            <td <?=InListStyle($carton->g_3,$cantadosArr)?>><?=$carton->g_3?></td>
+                            <td <?=InListStyle($carton->o_3,$cantadosArr)?>><?=$carton->o_3?></td>
                         </tr>
                         <tr>
-                            <td <?=InListStyle($carton->b_4,$cantados)?>><?=$carton->b_4?></td>
-                            <td <?=InListStyle($carton->i_4,$cantados)?>><?=$carton->i_4?></td>
-                            <td <?=InListStyle($carton->n_4,$cantados)?>><?=$carton->n_4?></td>
-                            <td <?=InListStyle($carton->g_4,$cantados)?>><?=$carton->g_4?></td>
-                            <td <?=InListStyle($carton->o_4,$cantados)?>><?=$carton->o_4?></td>
+                            <td <?=InListStyle($carton->b_4,$cantadosArr)?>><?=$carton->b_4?></td>
+                            <td <?=InListStyle($carton->i_4,$cantadosArr)?>><?=$carton->i_4?></td>
+                            <td <?=InListStyle($carton->n_4,$cantadosArr)?>><?=$carton->n_4?></td>
+                            <td <?=InListStyle($carton->g_4,$cantadosArr)?>><?=$carton->g_4?></td>
+                            <td <?=InListStyle($carton->o_4,$cantadosArr)?>><?=$carton->o_4?></td>
                         </tr>
                         <tr>
-                            <td <?=InListStyle($carton->b_5,$cantados)?>><?=$carton->b_5?></td>
-                            <td <?=InListStyle($carton->i_5,$cantados)?>><?=$carton->i_5?></td>
-                            <td <?=InListStyle($carton->n_5,$cantados)?>><?=$carton->n_5?></td>
-                            <td <?=InListStyle($carton->g_5,$cantados)?>><?=$carton->g_5?></td>
-                            <td <?=InListStyle($carton->o_5,$cantados)?>><?=$carton->o_5?></td>
+                            <td <?=InListStyle($carton->b_5,$cantadosArr)?>><?=$carton->b_5?></td>
+                            <td <?=InListStyle($carton->i_5,$cantadosArr)?>><?=$carton->i_5?></td>
+                            <td <?=InListStyle($carton->n_5,$cantadosArr)?>><?=$carton->n_5?></td>
+                            <td <?=InListStyle($carton->g_5,$cantadosArr)?>><?=$carton->g_5?></td>
+                            <td <?=InListStyle($carton->o_5,$cantadosArr)?>><?=$carton->o_5?></td>
                         </tr> 
                     </tbody>
                 </table>
@@ -418,7 +526,8 @@ $cantados =  consultarCantado($juego);
                     echo "</td>";
                     
                 }
-            }
+            } 
+
                 ?>
             <script>
                 <?php 
@@ -444,6 +553,11 @@ $cantados =  consultarCantado($juego);
                     addLiCarton("Completo",<?=$num?>);
                 <?php }?>
 
+                <?php 
+            if(!empty($_POST["modoJuego"])){
+                echo "ModoDeJuego(".$_POST["modoJuego"].");";
+            }
+            ?>
             </script>
             </tbody>
         </table>
