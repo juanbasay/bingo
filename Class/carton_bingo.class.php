@@ -27,6 +27,8 @@ namespace bingo{
         public $o_3;
         public $o_4;
         public $o_5;
+        public $NombreComprador;
+        public $NumeroManual;
     }
 }
 ?>

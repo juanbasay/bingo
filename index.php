@@ -408,26 +408,26 @@ $cantados =  Data\consultarCantado($juego);
                 $i=0;
                 foreach(Data\consultarCartonBingo() as $carton){
                     if(IsDiagIzq($carton,$cantadosArr))
-                        array_push($ListaDiagIzq,$carton->NumeroCartonBingo);
+                        array_push($ListaDiagIzq,$carton->NumeroManual." - ".$carton->NombreComprador);
 
                     if(IsDiagDer($carton,$cantadosArr))
-                        array_push($ListaDiagDer,$carton->NumeroCartonBingo);
+                        array_push($ListaDiagDer,$carton->NumeroManual." - ".$carton->NombreComprador);
 
                     if(IsHorizontalMedio($carton,$cantadosArr))
-                        array_push($ListaHorizontalMedio,$carton->NumeroCartonBingo);
+                        array_push($ListaHorizontalMedio,$carton->NumeroManual." - ".$carton->NombreComprador);
 
                     if(IsEsquinas($carton,$cantadosArr))
-                        array_push($ListaEsquinas,$carton->NumeroCartonBingo);
+                        array_push($ListaEsquinas,$carton->NumeroManual." - ".$carton->NombreComprador);
 
                      if(IsEquis($carton,$cantadosArr))
-                        array_push($ListaEquis,$carton->NumeroCartonBingo);
+                        array_push($ListaEquis,$carton->NumeroManual." - ".$carton->NombreComprador);
 
                      if(IsCruz($carton,$cantadosArr))
-                        array_push($ListaCruz,$carton->NumeroCartonBingo);
+                        array_push($ListaCruz,$carton->NumeroManual." - ".$carton->NombreComprador);
 
 
                     if(IsCompleto($carton,$cantadosArr))
-                        array_push($ListaCompleto,$carton->NumeroCartonBingo);
+                        array_push($ListaCompleto,$carton->NumeroManual." - ".$carton->NombreComprador);
                     
 
                     $i++;
@@ -470,10 +470,10 @@ $cantados =  Data\consultarCantado($juego);
                     ?>
 
 
-                <table border=1 name="cartones" id="carton_<?=$i?>">
+                <table border=1 name="cartones" id="carton_<?=$carton->NumeroManual?>">
                     <thead>
                         <tr>
-                            <th colspan=5><?="BINGO #".$i?></th>
+                            <th colspan=5><?="BINGO #".$carton->NumeroManual?></th>
                         </tr>
                         <tr>
                             <th>B</th>
@@ -532,25 +532,25 @@ $cantados =  Data\consultarCantado($juego);
             <script>
                 <?php 
                 foreach($ListaDiagIzq as $num){?>
-                    addLiCarton("DiagIzq",<?=$num?>);
+                    addLiCarton("DiagIzq","<?=$num?>");
                 <?php }
                 foreach($ListaDiagDer as $num){?>
-                    addLiCarton("DiagDer",<?=$num?>);
+                    addLiCarton("DiagDer","<?=$num?>");
                 <?php }
                 foreach($ListaHorizontalMedio as $num){?>
-                    addLiCarton("HorizontalMedio",<?=$num?>);
+                    addLiCarton("HorizontalMedio","<?=$num?>");
                 <?php }
                 foreach($ListaEsquinas as $num){?>
-                    addLiCarton("Esquinas",<?=$num?>);
+                    addLiCarton("Esquinas","<?=$num?>");
                 <?php }
                 foreach($ListaEquis as $num){?>
-                    addLiCarton("Equis",<?=$num?>);
+                    addLiCarton("Equis","<?=$num?>");
                 <?php }
                 foreach($ListaCruz as $num){?>
-                    addLiCarton("Cruz",<?=$num?>);
+                    addLiCarton("Cruz","<?=$num?>");
                 <?php }
                 foreach($ListaCompleto as $num){?>
-                    addLiCarton("Completo",<?=$num?>);
+                    addLiCarton("Completo","<?=$num?>");
                 <?php }?>
 
                 <?php 

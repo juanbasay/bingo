@@ -65,12 +65,15 @@ include("conexion.php");
   }
 
   function consultarCartonBingo(){
+    include("config.php");
     $carton_bingo = array();
     $db     = new conexion();
     $conn   = $db->conectar();
     
     $sql = "SELECT * 
-            FROM carton_bingo cg;";
+            FROM carton_bingo cg";
+
+    $sql.= ($usa_NumeroCartonManual)?" order by NumeroManual asc ": " order by NumeroCartonBingo asc";
 
     if ($result = $conn -> query($sql)) {
       $array = [];
@@ -106,6 +109,9 @@ include("conexion.php");
         $carton->o_3 = $row["o_3"];
         $carton->o_4 = $row["o_4"];
         $carton->o_5 = $row["o_5"];
+        
+        $carton->NombreComprador = $row["NombreComprador"];
+        $carton->NumeroManual = ($usa_NumeroCartonManual)?$row["NumeroManual"]:$row["NumeroCartonBingo"];
         array_push($array,$carton);
       }
       return $array;

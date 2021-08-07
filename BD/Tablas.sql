@@ -51,9 +51,11 @@ CREATE TABLE IF NOT EXISTS `carton_bingo` (
   `o_3` int(11) DEFAULT NULL,
   `o_4` int(11) DEFAULT NULL,
   `o_5` int(11) DEFAULT NULL,
-  PRIMARY KEY (`NumeroCartonBingo`)
-) ENGINE=InnoDB AUTO_INCREMENT=481 DEFAULT CHARSET=latin1;
-
+  `NombreComprador` varchar(300) DEFAULT NULL,
+  `NumeroManual` int(11) DEFAULT NULL,
+  PRIMARY KEY (`NumeroCartonBingo`),
+  UNIQUE KEY `NumeroManual` (`NumeroManual`)
+) ENGINE=InnoDB AUTO_INCREMENT=482 DEFAULT CHARSET=latin1;
 -- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura para tabla bingo.juego
