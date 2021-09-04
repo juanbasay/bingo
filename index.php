@@ -33,6 +33,12 @@ $ListaEsquinas = [];
 $ListaEquis = [];
 $ListaCruz = [];
 $ListaCompleto = [];
+$ListaPuntos_Medios = [];
+$ListaV_Derecho = [];
+$ListaV_Reves = [];
+$ListaVertical_Medio = [];
+$ListaHorizontal_Primera_Linea = [];
+$ListaEsquinas_Dos_Medio = [];
 
 function IsHorizontalMedio($carton, $arr){
     if($carton && $arr){
@@ -160,7 +166,80 @@ function IsCompleto($carton, $arr){
     return false;
 }
 
-
+function IsPuntos_Medios($carton,$arr){
+    if($carton && $arr){
+        if(in_array($carton->b_3,$arr)&&
+           in_array($carton->n_1,$arr)&&
+           in_array($carton->n_5,$arr)&&
+           in_array($carton->o_3,$arr)){
+            return true;
+        }
+    }
+    return false;
+}
+function IsV_Derecho($carton,$arr){
+    if($carton && $arr){
+        if(in_array($carton->b_1,$arr)&&
+           in_array($carton->i_2,$arr)&& 
+           in_array($carton->g_2,$arr)&& 
+           in_array($carton->o_1,$arr)
+        ){
+            return true;
+        }
+    }
+    return false;
+}
+function IsV_Reves($carton,$arr){
+    if($carton && $arr){
+        if(in_array($carton->b_5,$arr)&&
+           in_array($carton->i_4,$arr)&&
+           in_array($carton->g_4,$arr)&&
+           in_array($carton->o_5,$arr)
+        ){
+            return true;
+        }
+    }
+    return false;
+}
+function IsVertical_Medio($carton,$arr){
+    if($carton && $arr){
+        if(in_array($carton->n_1,$arr)&&
+           in_array($carton->n_2,$arr)&&
+           in_array($carton->n_4,$arr)&&
+           in_array($carton->n_5,$arr)
+        ){
+            return true;
+        }
+    }
+    return false;
+}
+function IsHorizontal_Primera_Linea($carton,$arr){
+    if($carton && $arr){
+        if(in_array($carton->b_1,$arr)&&
+           in_array($carton->i_1,$arr)&&
+           in_array($carton->n_1,$arr)&&
+           in_array($carton->g_1,$arr)&&
+           in_array($carton->o_1,$arr)
+        ){
+            return true;
+        }
+    }
+    return false;
+}
+function IsEsquinas_Dos_Medio($carton,$arr){
+    if($carton && $arr){
+        if(in_array($carton->b_1,$arr)&&
+           in_array($carton->b_5,$arr)&&
+           in_array($carton->i_3,$arr)&&
+           in_array($carton->g_3,$arr)&&
+           in_array($carton->o_1,$arr)&&
+           in_array($carton->o_5,$arr)
+        ){
+            return true;
+        }
+    }
+    return false;
+}
 
 
 $cantados =  Data\consultarCantado($juego);
@@ -224,6 +303,24 @@ $cantados =  Data\consultarCantado($juego);
                         case 7:
                             $('.ocultar').prop('hidden',true);$('#td_Completo').prop('hidden',false);$('#titulo_Completo').prop('hidden',false)
                             break;
+                        case 8:
+                            $('.ocultar').prop('hidden',true);$('#td_Puntos_Medios').prop('hidden',false);$('#titulo_Puntos_Medios').prop('hidden',false)
+                            break;
+                        case 9:
+                            $('.ocultar').prop('hidden',true);$('#td_V_Derecho').prop('hidden',false);$('#titulo_V_Derecho').prop('hidden',false)
+                            break;
+                        case 10:
+                            $('.ocultar').prop('hidden',true);$('#td_V_Reves').prop('hidden',false);$('#titulo_V_Revés').prop('hidden',false)
+                            break;
+                        case 11:
+                            $('.ocultar').prop('hidden',true);$('#td_Vertical_Medio').prop('hidden',false);$('#titulo_Vertical_Medio').prop('hidden',false)
+                            break;
+                        case 12:
+                            $('.ocultar').prop('hidden',true);$('#td_Horizontal_Primera_Linea').prop('hidden',false);$('#titulo_Horizontal_PrimeraLínea').prop('hidden',false)
+                            break;
+                        case 13:
+                            $('.ocultar').prop('hidden',true);$('#td_Esquinas_Dos_Medio').prop('hidden',false);$('#titulo_Esquinas_y_DosMedios').prop('hidden',false)
+                            break;
                         default:
                             break;
                     }
@@ -249,15 +346,46 @@ $cantados =  Data\consultarCantado($juego);
         <hr />
         Modos de juego
 
-        <button onclick="ModoDeJuego(1);">Binguito Diagonal Izquierda</button>  
-        <button onclick="ModoDeJuego(2);">Binguito Diagonal Derecha</button>    
-        <button onclick="ModoDeJuego(3);">Binguito Horizontal Medio</button>    
-        <button onclick="ModoDeJuego(4);">Binguito Esquinas</button>    
-        <button onclick="ModoDeJuego(5);">Binguito Equis</button>   
-        <button onclick="ModoDeJuego(6);">Binguito Cruz</button>    
-        <button onclick="ModoDeJuego(7);">Binguito Completo</button> 
+        <?php if($Binguito_Diagonal_Izquierda){?>
+            <button onclick="ModoDeJuego(1);">Binguito Diagonal Izquierda</button>
+        <?php }
+            if($Binguito_Diag_Derecha){?>
+            <button onclick="ModoDeJuego(2);">Binguito Diagonal Derecha</button>
+        <?php }
+            if($Binguito_Horizontal_Medio){?>
+            <button onclick="ModoDeJuego(3);">Binguito Horizontal Medio</button>
+        <?php }
+            if($Binguito_Esquinas){?>
+            <button onclick="ModoDeJuego(4);">Binguito Esquinas</button>
+        <?php }
+             if($Binguito_Equis){?>
+            <button onclick="ModoDeJuego(5);">Binguito Equis</button>
+        <?php }
+            if($Binguito_Cruz){?>
+            <button onclick="ModoDeJuego(6);">Binguito Cruz</button>
+        <?php }
+            if($Binguito_Puntos_Medios){?>
+            <button onclick="ModoDeJuego(8);">Binguito Puntos Medios</button>
+        <?php }
+            if($Binguito_V_Derecho){?>
+            <button onclick="ModoDeJuego(9);">Binguito V Derecho</button>
+        <?php }
+            if($Binguito_V_Reves){?>
+            <button onclick="ModoDeJuego(10);">Binguito V Revés</button>
+        <?php }
+            if($Binguito_Vertical_Medio){?>
+            <button onclick="ModoDeJuego(11);">Binguito Vertical Medio</button>
+        <?php }
+            if($Binguito_Horizontal_Primera_Linea){?>
+            <button onclick="ModoDeJuego(12);">Binguito Horizontal Primera Línea</button>
+        <?php }
+            if($Binguito_Esquinas_Dos_Medio){?>
+            <button onclick="ModoDeJuego(13);">Binguito Esquinas y Dos Medios</button>
+        <?php }
+            if($Binguito_Completo){?>
+            <button onclick="ModoDeJuego(7);">Binguito Completo</button>
+        <?php }
 
-        <?php
         if(!empty($cantados)){
         ?>
         <hr />
@@ -266,28 +394,46 @@ $cantados =  Data\consultarCantado($juego);
             <thead>
                 <tr>
                     <th>
-                    Números Cantados
+                        Números Cantados
                     </th>
                     <th hidden class="ocultar" id="titulo_DiagIzq">
-                    Binguito Diagonal Izquierda
+                        Binguito Diagonal Izquierda
                     </th>
                     <th hidden class="ocultar" id="titulo_DiagDer">
-                    Binguito Diagonal Derecha
+                        Binguito Diagonal Derecha
                     </th>
                     <th hidden class="ocultar" id="titulo_HorizontalMedio">
-                    Binguito Horizontal Medio
+                        Binguito Horizontal Medio
                     </th>
                     <th hidden class="ocultar" id="titulo_Esquinas">
-                    Binguito Esquinas
+                        Binguito Esquinas
                     </th>
                     <th hidden class="ocultar" id="titulo_Equis">
-                    Binguito Equis
+                        Binguito Equis
                     </th>
                     <th hidden class="ocultar" id="titulo_Cruz">
-                    Binguito Cruz
+                        Binguito Cruz
                     </th>
-                     <th hidden class="ocultar" id="titulo_Completo">
-                    Binguito Completo
+                    <th hidden class="ocultar" id="titulo_Completo">
+                        Binguito Completo
+                    </th>
+                    <th hidden class="ocultar" id="titulo_Puntos_Medios">
+                        Binguito Puntos Medios
+                    </th>
+                    <th hidden class="ocultar" id="titulo_V_Derecho">
+                        Binguito V Derecho
+                    </th>
+                    <th hidden class="ocultar" id="titulo_V_Revés">
+                        Binguito V Revés
+                    </th>
+                    <th hidden class="ocultar" id="titulo_Vertical_Medio">
+                        Binguito Vertical Medio
+                    </th>
+                    <th hidden class="ocultar" id="titulo_Horizontal_PrimeraLínea">
+                        Binguito Horizontal Primera Línea
+                    </th>
+                    <th hidden class="ocultar" id="titulo_Esquinas_y_DosMedios">
+                        Binguito Esquinas y Dos Medios
                     </th>
                 </tr>
             </thead>
@@ -296,8 +442,6 @@ $cantados =  Data\consultarCantado($juego);
                     <td style="vertical-align: top;">
                         <table>
                             <tr>
-                                
-
                             <?php
                             $x = 0;
                             $cantadosArr = [];
@@ -330,11 +474,7 @@ $cantados =  Data\consultarCantado($juego);
                                         echo "</ul></td>";
                                     }
                                 ?>
-
-                                        <?php }?>
-                                        
-                                
-                                
+                                    <?php }?>
                                     </ul>
                                 </td>
                             </tr>
@@ -380,6 +520,36 @@ $cantados =  Data\consultarCantado($juego);
                         <ul id="Completo" >
                         </ul>
                     </td>
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Puntos_Medios">
+                        <ul id="Puntos_Medios">
+                        </ul>
+                    </td>
+
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_V_Derecho">
+                        <ul id="V_Derecho">
+                        </ul>
+                    </td>
+
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_V_Reves">
+                        <ul id="V_Reves">
+                        </ul>
+                    </td>
+
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Vertical_Medio">
+                        <ul id="Vertical_Medio">
+                        </ul>
+                    </td>
+
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Horizontal_Primera_Linea">
+                        <ul id="Horizontal_Primera_Linea">
+                        </ul>
+                    </td>
+
+                    <td hidden style="vertical-align: top;" class="ocultar" id="td_Esquinas_Dos_Medio">
+                        <ul id="Esquinas_Dos_Medio">
+                        </ul>
+                    </td>
+
                 </tr>
             </tbody>
         </table>
@@ -419,16 +589,27 @@ $cantados =  Data\consultarCantado($juego);
                     if(IsEsquinas($carton,$cantadosArr))
                         array_push($ListaEsquinas,$carton->NumeroManual." - ".$carton->NombreComprador);
 
-                     if(IsEquis($carton,$cantadosArr))
+                    if(IsEquis($carton,$cantadosArr))
                         array_push($ListaEquis,$carton->NumeroManual." - ".$carton->NombreComprador);
 
-                     if(IsCruz($carton,$cantadosArr))
+                    if(IsCruz($carton,$cantadosArr))
                         array_push($ListaCruz,$carton->NumeroManual." - ".$carton->NombreComprador);
-
 
                     if(IsCompleto($carton,$cantadosArr))
                         array_push($ListaCompleto,$carton->NumeroManual." - ".$carton->NombreComprador);
                     
+                    if(IsPuntos_Medios($carton,$cantadosArr))
+                        array_push($ListaPuntos_Medios,$carton->NumeroManual." - ".$carton->NombreComprador);
+                    if(IsV_Derecho($carton,$cantadosArr))
+                        array_push($ListaV_Derecho,$carton->NumeroManual." - ".$carton->NombreComprador);
+                    if(IsV_Reves($carton,$cantadosArr))
+                        array_push($ListaV_Reves,$carton->NumeroManual." - ".$carton->NombreComprador);
+                    if(IsVertical_Medio($carton,$cantadosArr))
+                        array_push($ListaVertical_Medio,$carton->NumeroManual." - ".$carton->NombreComprador);
+                    if(IsHorizontal_Primera_Linea($carton,$cantadosArr))
+                        array_push($ListaHorizontal_Primera_Linea,$carton->NumeroManual." - ".$carton->NombreComprador);
+                    if(IsEsquinas_Dos_Medio($carton,$cantadosArr))
+                        array_push($ListaEsquinas_Dos_Medio,$carton->NumeroManual." - ".$carton->NombreComprador);
 
                     $i++;
                     $contador++;
@@ -531,29 +712,72 @@ $cantados =  Data\consultarCantado($juego);
                 ?>
             <script>
                 <?php 
-                foreach($ListaDiagIzq as $num){?>
-                    addLiCarton("DiagIzq","<?=$num?>");
-                <?php }
-                foreach($ListaDiagDer as $num){?>
-                    addLiCarton("DiagDer","<?=$num?>");
-                <?php }
-                foreach($ListaHorizontalMedio as $num){?>
-                    addLiCarton("HorizontalMedio","<?=$num?>");
-                <?php }
-                foreach($ListaEsquinas as $num){?>
-                    addLiCarton("Esquinas","<?=$num?>");
-                <?php }
-                foreach($ListaEquis as $num){?>
-                    addLiCarton("Equis","<?=$num?>");
-                <?php }
-                foreach($ListaCruz as $num){?>
-                    addLiCarton("Cruz","<?=$num?>");
-                <?php }
-                foreach($ListaCompleto as $num){?>
-                    addLiCarton("Completo","<?=$num?>");
-                <?php }?>
+                if($Binguito_Diagonal_Izquierda){
+                    foreach($ListaDiagIzq as $num){?>
+                        addLiCarton("DiagIzq","<?=$num?>");
+                    <?php }
+                 }
+                if($Binguito_Diag_Derecha){
+                    foreach($ListaDiagDer as $num){?>
+                        addLiCarton("DiagDer","<?=$num?>");
+                    <?php }
+                 }
+                if($Binguito_Horizontal_Medio){
+                    foreach($ListaHorizontalMedio as $num){?>
+                        addLiCarton("HorizontalMedio","<?=$num?>");
+                    <?php }
+                 }
+                if($Binguito_Esquinas){
+                    foreach($ListaEsquinas as $num){?>
+                        addLiCarton("Esquinas","<?=$num?>");
+                    <?php }
+                 }
+                if($Binguito_Equis){
+                    foreach($ListaEquis as $num){?>
+                        addLiCarton("Equis","<?=$num?>");
+                    <?php }
+                 }
+                if($Binguito_Cruz){
+                    foreach($ListaCruz as $num){?>
+                        addLiCarton("Cruz","<?=$num?>");
+                    <?php }
+                 }
+                if($Binguito_Completo){
+                    foreach($ListaCompleto as $num){?>
+                        addLiCarton("Completo","<?=$num?>");
+                    <?php }
+                }
+                if($Binguito_Puntos_Medios){
+                    foreach($ListaPuntos_Medios as $num){?>
+                        addLiCarton("Puntos_Medios","<?=$num?>");
+                    <?php }
+                }
+                if($Binguito_V_Derecho){
+                    foreach($ListaV_Derecho as $num){?>
+                        addLiCarton("V_Derecho","<?=$num?>");
+                    <?php }
+                }
+                if($Binguito_V_Reves){
+                    foreach($ListaV_Reves as $num){?>
+                        addLiCarton("V_Reves","<?=$num?>");
+                    <?php }
+                }
+                if($Binguito_Vertical_Medio){
+                    foreach($ListaVertical_Medio as $num){?>
+                        addLiCarton("Vertical_Medio","<?=$num?>");
+                    <?php }
+                }
+                if($Binguito_Horizontal_Primera_Linea){
+                    foreach($ListaHorizontal_Primera_Linea as $num){?>
+                        addLiCarton("Horizontal_Primera_Linea","<?=$num?>");
+                    <?php }
+                }
+                if($Binguito_Esquinas_Dos_Medio){
+                    foreach($ListaEsquinas_Dos_Medio as $num){?>
+                        addLiCarton("Esquinas_Dos_Medio","<?=$num?>");
+                    <?php }
+                }
 
-                <?php 
             if(!empty($_POST["modoJuego"])){
                 echo "ModoDeJuego(".$_POST["modoJuego"].");";
             }
